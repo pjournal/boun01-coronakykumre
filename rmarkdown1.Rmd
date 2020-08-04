@@ -1,0 +1,14 @@
+---
+title: "Intro"
+author: "Okan Yıldırım"
+date: "8/4/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Assignment 1:RMarkdown Homework
+
+I work at  Farplas as a data analyst. I have been studying Python and R for 4 months and I want to develop and practice my R skills in this class. My goal is to improve myself consistently in data science area.   
