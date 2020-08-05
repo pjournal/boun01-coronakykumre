@@ -1,3 +1,3 @@
-## Here is my Assigment 1
+## My progress journal - Okan Yıldırım
 
-[RMARKDOWN](https://github.com/pjournal/boun01-coronakykumre/blob/gh-pages/assignment1.html)
+[Assigment 1](assignment1.html) is here.
