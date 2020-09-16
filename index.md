@@ -12,7 +12,7 @@
 
 ### Assignment3
 
-
+[Diamonds Price Estimation](https://pjournal.github.io/boun01-coronakykumre/Assignment3.html) is here. 
 
 # My group's(R-sızlar's) Progress Journal
 
