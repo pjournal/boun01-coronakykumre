@@ -1,0 +1,169 @@
+---
+title: "Assignment3"
+author: "Okan Yıldırım"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+    toc_depth: 4 
+    number_sections: true
+    theme: united
+---
+
+```{r setup, include=FALSE, message=FALSE,warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE,fig.align='center')
+```
+
+# Introduction
+
+## What is Diamond?
+
+Diamond is a rare mineral consisting of carbon, which occurs naturally. Each carbon atom in a diamond is surrounded and bound by four other carbon atoms by strong covalent bonds-the strongest form of chemical bond. This simple, standardized, tightly bonded arrangement yields one of the most durable and versatile known substances.
+
+![](C:/Users/okan/Downloads/745763.jpg)
+
+## Diamond Quality
+
+Diamonds are the most sought after gemstones in the world. Diamonds are spent several times more money than all other gemstones combined. Part of the explanation for the success of diamonds is because of their optical properties-or how it interacts with light. Other considerations include its diamond producers' toughness, fashion, tradition and aggressive marketing.
+
+
+
+# Data Information, Loading and Preprocessing
+
+## Package Loading
+
+```{r data2,message=FALSE,warning=FALSE}
+
+library(lubridate)
+library(dplyr)
+library(ggplot2)
+library(knitr)
+library(tibble)
+library(kableExtra)
+library(GGally)
+```
+
+In this analysis, we'll use dplyr, ggplot2, knitr, tibble, and kableExtra packages.
+
+## Data Information
+
+In this assignment we'll use diamonds dataset in ggplot2 package. By using glimpse() function we can seek at diamonds dataset. 
+
+```{r data1,message=FALSE,warning=FALSE}
+diamonds %>% glimpse()
+```
+
+There are 53190 rows and 10 columns. Variables are explained below:
+
+  - price : price in US dollars (\$326--\$18,823)
+  - carat : weight of the diamond (0.2--5.01)
+  - cut : quality of the cut (Fair, Good, Very Good, Premium, Ideal)
+  - color : diamond colour, from J (worst) to D (best)
+  - clarity : a measurement of how clear the diamond is (I1 (worst), SI2, SI1, VS2, VS1, VVS2, VVS1, IF (best))
+  - x : length in mm (0--10.74)
+  - y : width in mm (0--58.9)
+  - z : depth in mm (0--31.8)
+  - depth : total depth percentage = z / mean(x, y) = 2 * z / (x + y) (43--79)
+  - table : width of top of diamond relative to widest point (43--95)
+
+My goal is to provide useful exploratory data analysis (EDA) and to build a model for estimating the price of diamonds.
+
+
+
+## Data Preprocessing
+
+We’ll use the R built-in diamonds data set, which we start by converting into a tibble data frame (tbl_df) for easier data analysis.
+
+```{r dataprep1,message=FALSE,warning=FALSE}
+my_data <- as_tibble(diamonds)
+my_data
+```
+
+We'll first check for NA and duplicated values in our data. Besides since our 7 variables are numerical we'll check if any of them are zero. According to result we'll remove those columns.
+
+```{r dataprep2,message=FALSE,warning=FALSE}
+sum(is.na(my_data))
+```
+We are lucky that there is no NAs.
+
+```{r dataprep3,message=FALSE,warning=FALSE}
+sum(duplicated(my_data))
+my_data <-unique(my_data)
+sum(duplicated(my_data))
+```
+There were 146 duplicated rows, we'll remove them by using generic unique() function and check again. 
+```{r dataprep4,message=FALSE,warning=FALSE}
+my_data <-unique(my_data)
+sum(duplicated(my_data))
+```
+
+To get a glimpse of our data we'll glimpse() which is a function that comes with dplyr package.
+
+```{r dataprep5,message=FALSE,warning=FALSE}
+my_data %>% glimpse()
+```
+To get a summary of the data we'll use generic summary() function.
+
+```{r dataprep6,message=FALSE,warning=FALSE}
+summary(my_data)
+```
+
+
+# Exploratory Data Analysis
+```{r eda1,message=FALSE,warning=FALSE}
+ggplot(my_data,aes(x=price))+geom_histogram(binwidth = 50,color="darkred", fill="red")+
+  labs(y="Frequency", x="Price",title="Diamond Price Distribution")
+```
+
+Above histogram shows that quantities of diamonds decrease as prices increase.
+
+```{r eda2,message=FALSE,warning=FALSE}
+my_data %>%
+  group_by(cut) %>%
+  summarise(cut_count = n(),MinPrice = min(price),AvgPrice = mean(price),
+            MaxPrice = max(price)) %>%
+  kable(col.names = c("Cut Quality", "Quantity", "Min. Price", "Avg. Price", "Max. Price"))%>%
+  scroll_box(width = "100%", height = "200px")
+```
+
+
+We can see that there are more diamonds as quality of cut gets better. Besides, prices do not increase as quality of cut gets better. Avarage price of ideal cut diamonds is the cheapest despite it is the most popular one. Therefore we can not explain the changes in the price variable with cut type of diamond.
+
+```{r eda3,message=FALSE,warning=FALSE}
+
+ggplot(my_data, aes(x = carat)) +
+        geom_histogram(binwidth = 0.01,color="darkblue", fill="lightblue") +
+        scale_x_continuous(name = "Carat",
+                           breaks = seq(0, 3, 0.1),
+                           limits=c(0,3)) +
+        scale_y_continuous(name = "Quantity") +
+        labs(title="Distribution of Carat Levels")
+        
+```
+We can see that there are cumulations on some carat levels.
+
+```{r eda4,message=FALSE,warning=FALSE}
+my_data %>%
+  group_by(carat) %>%
+  summarise(carat_count = n(),
+            MinPrice = min(price),
+            AvgPrice = mean(price),
+            MaxPrice = max(price))%>%
+  kable(col.names = c("Carat", "Number of Carats","Min. Price", "Avg. Price", "Max. Price"))%>%
+  scroll_box(width = "100%", height = "200px")
+```
+We can see that as average price of diamonds increase as carat(weight of a diamond) increases. We can explain changes of price with carat values.
+
+# Machine Learning
+
+
+# References
+
+  - [Diamonds-Kaggle](https://www.kaggle.com/shivam2503/diamonds)
+  - [What is Diamond?](https://geology.com/minerals/diamond.shtml)
+  
+  
+
+  
